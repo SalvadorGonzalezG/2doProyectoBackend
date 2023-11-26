@@ -1,0 +1,23 @@
+ //definir las funciones que se van a ejecutar cuando mande a llamar una ruta
+ const getTareas = (req, res) => {
+    res.status(200).json({ message: 'Obtener Tareas backend <587' }) //mandar una respuesta en formato json('') con un status.
+ }
+
+ const createTarea = (req, res) => {
+    res.status(201).json({ message: 'Tarea Creada tc23' }) //mandar una respuesta en formato json('') con un status.
+ }
+
+ const updateTarea = (req, res) => {
+    res.status(200).json({ message: `Se modifico la tarea ${req.params.id} :D` }) //mandar una respuesta en formato json('') con un status.
+ }
+
+ const deleteTarea = (req, res) => {
+    res.status(200).json({ message: `Se elimino la tarea ${req.params.id} :C` }) //mandar una respuesta en formato json('') con un status.
+ } 
+
+ module.exports = { 
+    getTareas,
+    createTarea,
+    updateTarea,
+    deleteTarea
+ }

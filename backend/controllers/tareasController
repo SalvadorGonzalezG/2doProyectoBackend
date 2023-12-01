@@ -1,25 +1,32 @@
- const asyncHandler = require('express-async-handler')// envoltorio de mi funcion 
+            // FUNCIONALIDAD QUE VA A TENER CADA RUTAR
+ const asyncHandler = require('express-async-handler') //envoltorio de mi funcion asyncronas si estoy utilizando express para no colocar try catch (MANEJO EX EXCEPCIONES)
+ const Tarea = require('../models/tareasModel') //importacion de mi model.
+
  //definir las funciones que se van a ejecutar cuando mande a llamar una ruta
+ 
  const getTareas = asyncHandler ( async(req, res) => {
     res.status(200).json({ message: 'Obtener Tareas backend <587' }) //mandar una respuesta en formato json('') con un status.
  })
-
+            //Validación al crear una tarea.
  const createTarea = asyncHandler ( async(req, res) => {
-    //console.log(req.body) //recibir datos 
-    if(!req.body.texto){
+            //console.log(req.body) //recibir datos accediendo al body.
+    if(!req.body.texto){ //texto asi se coloco el nombre al probarlo en postman.
         res.status(400)
-        throw new Error('no escribiste una descripción más especifica') //
-        }
-        res.status(201).json({ message: 'Tarea Creada tc23' }) //mandar una respuesta en formato json('') con un status.
-    })
+        throw new Error('no escribiste una descripción más especifica') //lanzar un error
+ }
+ const tarea = await Tarea.create({
+   texto: req.body.texto
+ })
+        res.status(201).json({ tarea }) //mandar una respuesta en formato json('') con un status.
+})
  
  const updateTarea = asyncHandler( async(req, res) => {
     res.status(200).json({ message: `Se modifico la tarea ${req.params.id} :D` }) //mandar una respuesta en formato json('') con un status.
- })
+})
 
  const deleteTarea = asyncHandler ( async(req, res) => {
     res.status(200).json({ message: `Se elimino la tarea ${req.params.id} :C` }) //mandar una respuesta en formato json('') con un status.
- } )
+})
 
  module.exports = { 
     getTareas,

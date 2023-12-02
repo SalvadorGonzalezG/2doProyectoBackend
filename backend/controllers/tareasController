@@ -5,7 +5,8 @@
  //definir las funciones que se van a ejecutar cuando mande a llamar una ruta
  
  const getTareas = asyncHandler ( async(req, res) => {
-    res.status(200).json({ message: 'Obtener Tareas backend <587' }) //mandar una respuesta en formato json('') con un status.
+   const tareas = await Tarea.find() //await del modelo tarea con el metodo find para mostrar todos no colocamos nada en los parentesis.
+    res.status(200).json({ tareas }) //mandar una respuesta en formato json('') con un status.
  })
             //Validación al crear una tarea.
  const createTarea = asyncHandler ( async(req, res) => {
@@ -21,11 +22,26 @@
 })
  
  const updateTarea = asyncHandler( async(req, res) => {
-    res.status(200).json({ message: `Se modifico la tarea ${req.params.id} :D` }) //mandar una respuesta en formato json('') con un status.
+
+   const tarea = await Tarea.findById(req.params.id) // checar si existe
+   if(!tarea){
+      res.status(400)
+      throw new Error ("Tarea no encontrada") // si no existe la tarea me dice que esta no fue encontrada.
+   }
+   const updatedTarea = await Tarea.findByIdAndUpdate(req.params.id, req.body, { new: true }) //
+    res.status(200).json( updatedTarea ) //mandar una respuesta en formato json('') con un status.
 })
 
  const deleteTarea = asyncHandler ( async(req, res) => {
-    res.status(200).json({ message: `Se elimino la tarea ${req.params.id} :C` }) //mandar una respuesta en formato json('') con un status.
+   const tarea = await Tarea.findById(req.params.id) // checar si existe
+   if(!tarea){
+      res.status(400)
+      throw new Error ("Tarea no encontrada")
+   }
+   //Borrar un documento
+       await Tarea.deleteOne(tarea) //metodo más eficiente
+   // 2. const deleteTarea = await Tarea.findByIdAndDelete(req.params.id) // metodo menos eficiente Bus
+    res.status(200).json({ id:req.params.id }) //mandar una respuesta en formato json('') con un status.
 })
 
  module.exports = { 

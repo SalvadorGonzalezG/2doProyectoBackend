@@ -13,6 +13,7 @@ app.use(express.json()) // mi app va a usar json.
 app.use(express.urlencoded({ extends: false })) // de exprees tambien usare el metodo urlencode y si voy a usar un body parsel en tareas controller.
 
 app.use('/api/tareas',require('./routes/tareasRoutes')) // cuando alguien ponga /api tareas mande llamar el require
+app.use('/api/users',require('./routes/userRoutes')) 
 app.use(errorHandler) //usamos a errorHandrer. para que lo vera el desarrollador unicamente.
 
 app.listen(port, ()=> console.log(`servidor iniciado en el puerto ${port}`) ) //hacer que nuestra app este escuchando en el puerto 5000

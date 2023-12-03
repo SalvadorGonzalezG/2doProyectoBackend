@@ -3,6 +3,11 @@ const mongoose = require('mongoose') //paquete que se encarga de comunicarse con
 
 const tareasSchema = mongoose.Schema({ //metono schema funcion
     // campos que tendra nuestra coleccion.
+    user: {
+        type: mongoose.Schema.ObjectId, //tipo objetID de un schema
+        require: true,
+        ref: 'User' // de el eschema User
+    },
     texto: {  //objeto que tendra varias propiedades
         type: String, //tipo de dato. "Cadena."
         required: [true, 'porFavor teclea el texto de la tarea'] // campo requerido y en caso de que no lo tecle mande el msj debido al manejador de errores.

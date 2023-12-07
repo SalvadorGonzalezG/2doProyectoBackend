@@ -5,7 +5,7 @@
  //definir las funciones que se van a ejecutar cuando mande a llamar una ruta
  
  const getTareas = asyncHandler ( async(req, res) => {
-   const tareas = await Tarea.find() //await del modelo tarea con el metodo find para mostrar todos no colocamos nada en los parentesis.
+   const tareas = await Tarea.find({ user: req.user._id }) //await del modelo tarea con el metodo find para mostrar todos no colocamos nada en los parentesis.
     res.status(200).json({ tareas }) //mandar una respuesta en formato json('') con un status.
  })
             //Validación al crear una tarea.
@@ -16,20 +16,29 @@
         throw new Error('no escribiste una descripción más especifica') //lanzar un error
  }
  const tarea = await Tarea.create({
-   texto: req.body.texto
+   texto: req.body.texto,
+   user: req.user._id //agregando usuario a la tarea.
  })
         res.status(201).json({ tarea }) //mandar una respuesta en formato json('') con un status.
 })
  
  const updateTarea = asyncHandler( async(req, res) => {
-
+              
    const tarea = await Tarea.findById(req.params.id) // checar si existe
+             // Verificamos que la tarea exista.
    if(!tarea){
       res.status(400)
       throw new Error ("Tarea no encontrada") // si no existe la tarea me dice que esta no fue encontrada.
    }
-   const updatedTarea = await Tarea.findByIdAndUpdate(req.params.id, req.body, { new: true }) //
-    res.status(200).json( updatedTarea ) //mandar una respuesta en formato json('') con un status.
+            // Verificamos que la tarea le pertenezca al usuario del token proporcionado.
+   if(tarea.user.toString() != req.user.id){
+      res.status(401)
+      throw new Error("Acceso no autorizado")
+   } else {
+      const updatedTarea = await Tarea.findByIdAndUpdate(req.params.id, req.body, { new: true }) //
+      res.status(200).json( updatedTarea ) //mandar una respuesta en formato json('') con un status.
+   }
+
 })
 
  const deleteTarea = asyncHandler ( async(req, res) => {
@@ -38,10 +47,16 @@
       res.status(400)
       throw new Error ("Tarea no encontrada")
    }
-   //Borrar un documento
-       await Tarea.deleteOne(tarea) //metodo más eficiente
-   // 2. const deleteTarea = await Tarea.findByIdAndDelete(req.params.id) // metodo menos eficiente Bus
-    res.status(200).json({ id:req.params.id }) //mandar una respuesta en formato json('') con un status.
+   if(tarea.user.toString() != req.user.id){
+      res.status(401)
+      throw new Error("Acceso no autorizado")
+   } else {
+      //Borrar un documento
+      await Tarea.deleteOne(tarea) //metodo más eficiente
+      // 2. const deleteTarea = await Tarea.findByIdAndDelete(req.params.id) // metodo menos eficiente Bus
+       res.status(200).json({ id:req.params.id }) //mandar una respuesta en formato json('') con un status.
+   
+   }
 })
 
  module.exports = { 

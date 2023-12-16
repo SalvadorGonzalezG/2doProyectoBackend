@@ -6,7 +6,7 @@
         const conectDB = async () => { // funcion asincrona ya que tenemos que esperar a que se conecte.
             try {       //TODA FUNCION ASINCRONA LLEVA UN AWAIT
                 const conn = await mongoose.connect(process.env.MONGO_URI) //CADENA DE CONEXIÓN acceder atravez del process
-                console.log(`MONGO_BD CONECTED: ${conn.connection.host}`.yellow.underline) //una vez que ya se conecto
+                console.log(`MONGO_BD CONECTED: ${conn.connection.host}`.blue.underline) //una vez que ya se conecto
             } catch (error) {
                 console.log(error) //si hay un error quer lo cache y me mande el error
                 process.exit(1)    //en caso de que no se pueda conectar termina la ejecucion
